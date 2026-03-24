@@ -1,12 +1,9 @@
-import './App.css'
+import AppRoutes from "./routes/Routes";
 
 function App() {
-
   return (
-    <>
-     <h1>Avinyathon Project</h1>
-    </>
-  )
+    <AppRoutes />
+  );
 }
 
-export default App
+export default App;
