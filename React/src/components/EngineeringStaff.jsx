@@ -23,7 +23,8 @@ const engineers = [
 
 export default function EngineeringStaff() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-50 shadow-sm mt-8 overflow-hidden">
+    <div className="flex-1 ml-64 bg-slate-50 min-h-screen p-8">
+      <div className="bg-white rounded-2xl border border-gray-50 shadow-sm overflow-hidden">
       <div className="p-8">
         <div className="flex justify-between items-start mb-8">
           <div>
@@ -68,6 +69,7 @@ export default function EngineeringStaff() {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

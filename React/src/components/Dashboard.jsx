@@ -1,7 +1,9 @@
 import { Search, Bell, HelpCircle, Building2, Users, Wallet, CreditCard } from 'lucide-react';
+import { UserButton, useUser } from "@clerk/clerk-react";
 import StatCard from './StatCard';
 
 export default function Dashboard() {
+  const { user } = useUser();
   return (
     <div className="flex-1 ml-64 bg-slate-50 min-h-screen p-8">
       {/* Header */}
@@ -25,10 +27,12 @@ export default function Dashboard() {
           <button className="text-gray-400"><HelpCircle size={22} /></button>
           <div className="flex items-center gap-3 border-l pl-6 border-gray-200">
             <div className="text-right">
-              <p className="text-sm font-bold">JP</p>
+              <p className="text-sm font-bold">{user?.firstName || 'User'}</p>
               <p className="text-[10px] text-gray-400 uppercase font-medium">Project Admin</p>
             </div>
-            <img src="https://ui-avatars.com/api/?name=J+P&background=FDBA74&color=fff" className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" alt="profile" />
+            <div className="h-10 w-10 flex items-center justify-center rounded-full border-2 border-white shadow-sm bg-orange-100">
+              <UserButton afterSignOutUrl="/login" />
+            </div>
           </div>
         </div>
       </header>
