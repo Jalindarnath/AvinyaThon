@@ -19,6 +19,16 @@ export const getSites = async () => {
   );
 };
 
+// Update Site
+export const updateSite = async (documentId, data) => {
+  return databases.updateDocument(
+    DATABASE_ID,
+    COLLECTIONS.SITES,
+    documentId,
+    data
+  );
+};
+
 //  Ping Connection (Health Check)
 export const pingAppwrite = async () => {
   try {

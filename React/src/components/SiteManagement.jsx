@@ -1,10 +1,50 @@
 import { useState, useEffect } from 'react';
 import { Building2, Plus, Compass } from 'lucide-react';
-import { getSites } from '../../appwrite/services/site.service';
+import { getSites, updateSite } from '../../appwrite/services/site.service';
 
 export default function SiteManagement() {
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [editingSite, setEditingSite] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    siteName: '',
+    location: '',
+    manager: '',
+    status: 'ACTIVE'
+  });
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  const handleEditClick = (site) => {
+    setEditingSite(site);
+    setEditFormData({
+      siteName: site.siteName || site.name || '',
+      location: site.location || site.loc || '',
+      manager: site.manager || '',
+      status: site.status || 'ACTIVE'
+    });
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setUpdateLoading(true);
+    try {
+      await updateSite(editingSite.$id, {
+        siteName: editFormData.siteName,
+        location: editFormData.location,
+        manager: editFormData.manager,
+        status: editFormData.status
+      });
+      // Refresh sites
+      const response = await getSites();
+      setSites(response.documents);
+      setEditingSite(null);
+    } catch (error) {
+      console.error("Error updating site:", error);
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchSites = async () => {
@@ -43,12 +83,9 @@ export default function SiteManagement() {
         </div>
 
         <div className="bg-[#005B8E] p-8 rounded-2xl text-white">
-          <p className="text-blue-200 text-[10px] font-bold uppercase tracking-widest mb-2">Portfolio Completion</p>
-          <h3 className="text-5xl font-black mb-6">Average Progress</h3>
-          <div className="w-full h-2 bg-blue-900/50 rounded-full mb-3">
-            <div className="w-[84%] h-full bg-white rounded-full"></div>
-          </div>
-          <p className="text-blue-100 text-xs font-medium">calculated globally</p>
+          <p className="text-blue-200 text-[10px] font-bold uppercase tracking-widest mb-2">Team Overview</p>
+          <h3 className="text-5xl font-black mb-6">Staffing</h3>
+          <p className="text-blue-100 text-sm font-medium">Manage your sites and assign managers efficiently to all your active projects.</p>
         </div>
       </div>
 
@@ -61,7 +98,7 @@ export default function SiteManagement() {
               <th className="px-6 py-5">Location</th>
               <th className="px-6 py-5">Status</th>
               <th className="px-6 py-5">Manager</th>
-              <th className="px-6 py-5">Progress</th>
+              <th className="px-6 py-5">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -91,12 +128,12 @@ export default function SiteManagement() {
                      <span className="text-sm font-bold text-gray-700">{site.manager || 'Unassigned'}</span>
                   </td>
                   <td className="px-6 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-orange-800" style={{ width: `${site.progress || 0}%` }}></div>
-                      </div>
-                      <span className="text-xs font-bold text-gray-800">{site.progress || 0}%</span>
-                    </div>
+                    <button 
+                      onClick={() => handleEditClick(site)}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-200 transition-colors"
+                    >
+                      Edit 
+                    </button>
                   </td>
                 </tr>
               ))
@@ -104,6 +141,88 @@ export default function SiteManagement() {
           </tbody>
         </table>
       </div>
+
+      {/* Edit Modal */}
+      {editingSite && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setEditingSite(null)}></div>
+          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl relative z-10">
+            <div className="bg-orange-800 p-6 text-white">
+              <h3 className="text-2xl font-bold">Edit Site</h3>
+              <p className="text-orange-100 text-sm">Update details for project {editingSite.siteId || editingSite.$id.substring(0, 8)}</p>
+            </div>
+            
+            <form onSubmit={handleUpdate} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
+                  Site Name
+                </label>
+                <input 
+                  type="text" 
+                  value={editFormData.siteName}
+                  onChange={(e) => setEditFormData({...editFormData, siteName: e.target.value})}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
+                  Location
+                </label>
+                <input 
+                  type="text" 
+                  value={editFormData.location}
+                  onChange={(e) => setEditFormData({...editFormData, location: e.target.value})}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
+                  Manager 
+                </label>
+                <input 
+                  type="text" 
+                  value={editFormData.manager}
+                  onChange={(e) => setEditFormData({...editFormData, manager: e.target.value})}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
+                  Status
+                </label>
+                <select 
+                  value={editFormData.status}
+                  onChange={(e) => setEditFormData({...editFormData, status: e.target.value})}
+                  className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                >
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="COMPLETED">COMPLETED</option>
+                  <option value="ON HOLD">ON HOLD</option>
+                </select>
+              </div>
+              
+              <div className="flex justify-end gap-3 mt-8">
+                <button
+                  type="button"
+                  onClick={() => setEditingSite(null)}
+                  className="px-4 py-2 rounded-lg text-gray-500 font-bold hover:bg-gray-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={updateLoading}
+                  className="px-6 py-2 bg-orange-800 text-white rounded-lg font-bold hover:bg-orange-700 disabled:opacity-50 transition-colors"
+                >
+                  {updateLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

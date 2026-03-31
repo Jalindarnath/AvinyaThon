@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "@clerk/clerk-react";
-import { Building2, MapPin, Hash, ArrowLeft } from 'lucide-react';
+import { Building2, MapPin, Hash, ArrowLeft, User as UserIcon } from 'lucide-react';
 import { createSite } from '../../../appwrite/services/site.service';
 import { useSite } from '../../context/SiteContext';
 
@@ -13,6 +13,7 @@ export default function CreateSite() {
   const [formData, setFormData] = useState({
     siteName: '',
     location: '',
+    manager: '',
     siteId: `BT-${Math.floor(1000 + Math.random() * 9000)}` 
   });
   const [loading, setLoading] = useState(false);
@@ -32,6 +33,7 @@ export default function CreateSite() {
       const siteData = {
         siteName: formData.siteName,
         location: formData.location,
+        manager: formData.manager,
         siteId: formData.siteId,
         createdBy: user ? user.id : 'anonymous'
       };
@@ -106,6 +108,26 @@ export default function CreateSite() {
                   required
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all font-medium text-gray-800"
                   placeholder="e.g. 142 West Boulevard, Downtown"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">
+                Manager Name
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <UserIcon size={18} />
+                </div>
+                <input
+                  type="text"
+                  name="manager"
+                  value={formData.manager}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all font-medium text-gray-800"
+                  placeholder="e.g. Jane Doe"
                 />
               </div>
             </div>
