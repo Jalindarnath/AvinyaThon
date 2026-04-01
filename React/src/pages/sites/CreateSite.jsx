@@ -14,7 +14,7 @@ export default function CreateSite() {
     siteName: '',
     location: '',
     manager: '',
-    siteId: `BT-${Math.floor(1000 + Math.random() * 9000)}` 
+    siteId: `SD-${Math.floor(1000 + Math.random() * 9000)}` 
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -149,7 +149,7 @@ export default function CreateSite() {
                   onChange={handleInputChange}
                   required
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all font-medium text-gray-800"
-                  placeholder="e.g. BT-8392"
+                  placeholder="e.g. SD-8392"
                 />
               </div>
             </div>

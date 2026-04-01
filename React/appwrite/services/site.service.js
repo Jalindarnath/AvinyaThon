@@ -1,4 +1,4 @@
-import { databases, ID } from "../config/appwriteConfig";
+import { databases, ID, Query } from "../config/appwriteConfig";
 import { DATABASE_ID, COLLECTIONS } from "../config/appwriteConfig";
 
 //  Create Site
@@ -11,11 +11,15 @@ export const createSite = async (data) => {
   );
 };
 
-//  Get All Sites
-export const getSites = async () => {
+//  Get All Sites (RBAC enforced)
+export const getSites = async (userId, role = 'MANAGER') => {
+  // Admin bypasses privacy filter
+  const queries = role === 'ADMIN' ? [] : [Query.equal("createdBy", userId)];
+  
   return databases.listDocuments(
     DATABASE_ID,
-    COLLECTIONS.SITES
+    COLLECTIONS.SITES,
+    queries
   );
 };
 

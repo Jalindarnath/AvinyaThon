@@ -79,7 +79,7 @@ export default function SiteManagement() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
         <div className="lg:col-span-2 bg-white p-8 rounded-2xl border border-gray-50 flex justify-between items-center relative overflow-hidden">
           <div>
-            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Active Projects</p>
+            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">Total Projects</p>
             <h3 className="text-3xl font-black text-gray-800 mb-4">{sites.length}</h3>
             <div className="flex gap-2">
               <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[10px] font-bold">{sites.filter(s => (s.status || 'ACTIVE').toUpperCase() === 'ACTIVE').length} Active</span>
@@ -124,24 +124,23 @@ export default function SiteManagement() {
                   </td>
                   <td className="px-6 py-6 text-sm text-gray-500 font-medium">{site.location || site.loc || 'Not specified'}</td>
                   <td className="px-6 py-6">
-                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold ${
-                      (site.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
-                    }`}>
+                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold ${(site.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
+                      }`}>
                       {(site.status || 'ACTIVE').toUpperCase()}
                     </span>
                   </td>
                   <td className="px-6 py-6 flex items-center gap-3">
-                     <span className="text-sm font-bold text-gray-700">{site.manager || 'Unassigned'}</span>
+                    <span className="text-sm font-bold text-gray-700">{site.manager || 'Unassigned'}</span>
                   </td>
                   <td className="px-6 py-6">
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         onClick={() => handleEditClick(site)}
                         className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs font-bold hover:bg-gray-200 transition-colors"
                       >
-                        Edit 
+                        Edit
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDeleteClick(site)}
                         className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
                         title="Delete Site"
@@ -166,16 +165,16 @@ export default function SiteManagement() {
               <h3 className="text-2xl font-bold">Edit Site</h3>
               <p className="text-orange-100 text-sm">Update details for project {editingSite.siteId || editingSite.$id.substring(0, 8)}</p>
             </div>
-            
+
             <form onSubmit={handleUpdate} className="p-6 space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
                   Site Name
                 </label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={editFormData.siteName}
-                  onChange={(e) => setEditFormData({...editFormData, siteName: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, siteName: e.target.value })}
                   className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
                   required
                 />
@@ -184,22 +183,22 @@ export default function SiteManagement() {
                 <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
                   Location
                 </label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={editFormData.location}
-                  onChange={(e) => setEditFormData({...editFormData, location: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })}
                   className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
                   required
                 />
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
-                  Manager 
+                  Manager
                 </label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={editFormData.manager}
-                  onChange={(e) => setEditFormData({...editFormData, manager: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, manager: e.target.value })}
                   className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
                 />
               </div>
@@ -207,9 +206,9 @@ export default function SiteManagement() {
                 <label className="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">
                   Status
                 </label>
-                <select 
+                <select
                   value={editFormData.status}
-                  onChange={(e) => setEditFormData({...editFormData, status: e.target.value})}
+                  onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
                   className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 focus:outline-none"
                 >
                   <option value="ACTIVE">ACTIVE</option>
@@ -217,7 +216,7 @@ export default function SiteManagement() {
                   <option value="ON HOLD">ON HOLD</option>
                 </select>
               </div>
-              
+
               <div className="flex justify-end gap-3 mt-8">
                 <button
                   type="button"

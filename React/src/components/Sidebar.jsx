@@ -32,7 +32,7 @@ export default function Sidebar() {
           <Building2 size={24} />
         </div>
         <div>
-          <h1 className="font-bold text-lg leading-tight">BuildTrack</h1>
+          <h1 className="font-bold text-lg leading-tight">Samarth Developers</h1>
           <p className="text-[10px] uppercase tracking-widest text-gray-400">Construction Mgt</p>
         </div>
       </div>

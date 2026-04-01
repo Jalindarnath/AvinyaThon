@@ -3,7 +3,7 @@ import { UserButton } from "@clerk/clerk-react";
 const ClerkLogout = () => {
   return (
     <div>
-      <h2>BuildTrack</h2>
+      <h2>Samarth Developers</h2>
 
       {/* Clerk handles logout automatically */}
       <UserButton />
