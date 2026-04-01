@@ -1,57 +1,11 @@
 import { useState } from "react";
-import { useSignIn } from "@clerk/clerk-react";
-import { useNavigate, Link } from "react-router-dom";
-import { Building2, ShieldCheck, HardHat, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import { SignIn } from "@clerk/clerk-react";
+import { Building2, ShieldCheck, HardHat } from "lucide-react";
 
 const ADMIN_EMAIL = "admin@samarthdevelopers.com";
 
 const Login = () => {
-  const { signIn, setActive, isLoaded } = useSignIn();
-  const navigate = useNavigate();
-
   const [activeTab, setActiveTab] = useState("manager");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // When switching to Admin tab, pre-fill the admin email
-  const handleTabSwitch = (tab) => {
-    setActiveTab(tab);
-    setError("");
-    setPassword("");
-    setEmail(tab === "admin" ? ADMIN_EMAIL : "");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isLoaded) return;
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const result = await signIn.create({
-        identifier: email,
-        password,
-      });
-
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId });
-        navigate("/");
-      } else {
-        setError("Sign-in could not be completed. Please try again.");
-      }
-    } catch (err) {
-      const msg = err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message || "Invalid email or password.";
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const isAdmin = activeTab === "admin";
 
   return (
     <div className="flex min-h-screen">
@@ -85,10 +39,9 @@ const Login = () => {
         {/* Tab Switcher */}
         <div className="flex bg-white border border-slate-200 rounded-xl p-1 gap-1 mb-8 shadow-sm">
           <button
-            type="button"
-            onClick={() => handleTabSwitch("manager")}
+            onClick={() => setActiveTab("manager")}
             className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-              !isAdmin
+              activeTab === "manager"
                 ? "bg-orange-800 text-white shadow"
                 : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
             }`}
@@ -97,10 +50,9 @@ const Login = () => {
             Manager
           </button>
           <button
-            type="button"
-            onClick={() => handleTabSwitch("admin")}
+            onClick={() => setActiveTab("admin")}
             className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
-              isAdmin
+              activeTab === "admin"
                 ? "bg-indigo-700 text-white shadow"
                 : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
             }`}
@@ -110,127 +62,40 @@ const Login = () => {
           </button>
         </div>
 
-        {/* Form Card */}
-        <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          {/* Card Header */}
-          <div className={`px-8 py-6 ${isAdmin ? "bg-indigo-700" : "bg-orange-800"} text-white`}>
-            <div className="flex items-center gap-3">
-              {isAdmin ? <ShieldCheck size={22} /> : <HardHat size={22} />}
-              <div>
-                <h2 className="text-lg font-bold">
-                  {isAdmin ? "Admin Sign In" : "Manager Sign In"}
-                </h2>
-                <p className="text-sm opacity-75">
-                  {isAdmin
-                    ? "Restricted to authorized administrators only."
-                    : "Access your assigned sites and manage your team."}
-                </p>
+        {/* Dynamic header — swaps based on active tab */}
+        <div className="w-full max-w-md flex flex-col items-center mb-5">
+          {activeTab === "manager" ? (
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-orange-50 text-orange-800 mb-3">
+                <HardHat size={24} />
               </div>
-            </div>
-          </div>
-
-          {/* Form Body */}
-          <form onSubmit={handleSubmit} className="px-8 py-7 space-y-5">
-            {/* Error */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg font-medium">
-                {error}
-              </div>
-            )}
-
-            {/* Admin hint */}
-            {isAdmin && (
-              <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-medium px-4 py-2.5 rounded-lg">
-                <ShieldCheck size={13} className="flex-shrink-0" />
-                Admin account: <strong>{ADMIN_EMAIL}</strong>
-              </div>
-            )}
-
-            {/* Email */}
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  readOnly={isAdmin}
-                  placeholder={isAdmin ? ADMIN_EMAIL : "Enter your email"}
-                  className={`w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border focus:outline-none focus:ring-2 transition-all font-medium
-                    ${isAdmin
-                      ? "bg-slate-50 border-slate-200 text-slate-500 cursor-not-allowed"
-                      : "bg-slate-50 border-slate-200 text-slate-800 focus:ring-orange-400 focus:bg-white"
-                    }`}
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className={`w-full pl-9 pr-11 py-2.5 text-sm rounded-xl border bg-slate-50 focus:bg-white text-slate-800 focus:outline-none focus:ring-2 transition-all font-medium
-                    ${isAdmin ? "focus:ring-indigo-400 border-slate-200" : "focus:ring-orange-400 border-slate-200"}`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  tabIndex={-1}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading || !isLoaded}
-              className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed mt-2
-                ${isAdmin
-                  ? "bg-indigo-700 hover:bg-indigo-600 shadow-indigo-200 hover:shadow-indigo-300"
-                  : "bg-orange-800 hover:bg-orange-700 shadow-orange-100 hover:shadow-orange-200"
-                }`}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                `Sign In as ${isAdmin ? "Admin" : "Manager"}`
-              )}
-            </button>
-
-            {/* Sign up link (only for managers) */}
-            {!isAdmin && (
-              <p className="text-center text-xs text-slate-500 pt-1">
-                Don't have an account?{" "}
-                <Link to="/signup" className="text-orange-700 font-semibold hover:underline">
-                  Sign up
-                </Link>
+              <h2 className="text-xl font-bold text-slate-900">Manager Sign In</h2>
+              <p className="text-sm text-slate-500 mt-1">
+                Access your assigned sites and manage your team.
               </p>
-            )}
-          </form>
+            </div>
+          ) : (
+            <div className="text-center w-full">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 mb-3">
+                <ShieldCheck size={24} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900">Admin Sign In</h2>
+              <p className="text-sm text-slate-500 mt-1">
+                Full system access. Restricted to authorized administrators only.
+              </p>
+              {/* Admin email hint */}
+              <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-medium px-4 py-2.5 rounded-lg mt-4">
+                <ShieldCheck size={14} className="flex-shrink-0" />
+                <span>
+                  Admin ID: <strong className="font-bold">{ADMIN_EMAIL}</strong>
+                </span>
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Single persistent SignIn widget — avoids 422 conflicts from dual mounting */}
+        <SignIn routing="path" path="/login" signUpUrl="/signup" />
       </div>
     </div>
   );
