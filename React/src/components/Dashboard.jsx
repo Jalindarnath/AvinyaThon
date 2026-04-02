@@ -1,4 +1,4 @@
-import { Building2, Users, Wallet, CreditCard, LogOut } from 'lucide-react';
+import { Building2, Users, Wallet, CreditCard, LogOut, BarChart3, Plus } from 'lucide-react';
 import { useAuth } from "../context/AuthContext";
 import StatCard from './StatCard';
 import { useSite } from '../context/SiteContext';

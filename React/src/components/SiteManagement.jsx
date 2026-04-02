@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Building2, Plus, Compass, Trash2, Lock } from 'lucide-react';
+import { Building2, Plus, Compass, Trash2, Lock, Search, Filter, Loader2, Tag, MapPin, Edit3 } from 'lucide-react';
 import { updateSite, deleteSite } from '../../appwrite/services/site.service';
 import { useSite } from '../context/SiteContext';
 import { useAuth } from '../context/AuthContext';
@@ -11,6 +11,17 @@ export default function SiteManagement() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const isAdmin = user?.role === 'admin';
+
+  const Math = window.Math;
+  
+  const filteredSites = sites?.filter(site => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    return (
+      (site.siteName || site.name || '').toLowerCase().includes(term) ||
+      (site.location || site.loc || '').toLowerCase().includes(term)
+    );
+  }) || [];
 
   const [editingSite, setEditingSite] = useState(null);
   const [editFormData, setEditFormData] = useState({
