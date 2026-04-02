@@ -1,27 +1,26 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth } from "./AuthContext";
 import { getSites, pingAppwrite } from "../../appwrite/services/site.service";
-
-const ADMIN_EMAIL = "admin@samarthdevelopers.com";
 
 const SiteContext = createContext();
 
 export const SiteProvider = ({ children }) => {
-  const { user, isLoaded } = useUser();
+  const { user, isAuthenticated, loading } = useAuth();
   const [selectedSite, setSelectedSite] = useState(null);
   const [sites, setSites] = useState([]);
 
-  // Derive role from the logged-in Clerk user
-  const role = user?.primaryEmailAddress?.emailAddress === ADMIN_EMAIL ? "ADMIN" : "MANAGER";
-  const userId = user?.id ?? null;
+  // Derive role and userId from appwrite user object
+  const role = user?.role || "user";
+  const userId = user?.user?.$id ?? null;
+  const assignedSiteId = user?.siteId ?? null;
 
   const fetchSites = useCallback(async () => {
-    // Don't fetch until Clerk has resolved the user session
-    if (!isLoaded || !userId) return;
+    // Don't fetch until auth is loaded
+    if (loading || !isAuthenticated || !userId) return;
 
     try {
       await pingAppwrite();
-      const response = await getSites(userId, role);
+      const response = await getSites(userId, role, assignedSiteId);
       setSites(response.documents || []);
       if (response.documents?.length > 0 && !selectedSite) {
         setSelectedSite(response.documents[0]);
@@ -29,7 +28,7 @@ export const SiteProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching sites:", error);
     }
-  }, [isLoaded, userId, role]);
+  }, [loading, userId, role, assignedSiteId]);
 
   useEffect(() => {
     fetchSites();

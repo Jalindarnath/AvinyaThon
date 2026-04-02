@@ -1,11 +1,6 @@
 import { UserPlus, Pencil, Trash2, Users, HardHat } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 
-const laborers = [
-  { id: 'BT-LAB-402', name: 'John Doe', role: 'Mason', wage: '$45.00', site: 'Downtown Plaza', status: 'ACTIVE', initial: 'JD' },
-  { id: 'BT-LAB-115', name: 'Mike Ross', role: 'Helper', wage: '$28.00', site: 'River Heights', status: 'ACTIVE', initial: 'MR' },
-  { id: 'BT-LAB-891', name: 'Sarah Hudson', role: 'Carpenter', wage: '$52.00', site: 'Bridge Project X', status: 'LEAVE', initial: 'SH' },
-];
 
 export default function LaborersDirectory() {
   const { selectedSite } = useSite();

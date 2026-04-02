@@ -10,10 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.61.4",
     "@tailwindcss/vite": "^4.2.2",
     "appwrite": "^23.0.0",
     "lucide-react": "^1.7.0",
+    "node-appwrite": "^23.1.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

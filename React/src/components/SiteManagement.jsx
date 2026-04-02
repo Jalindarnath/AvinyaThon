@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Building2, Plus, Compass, Trash2 } from 'lucide-react';
+import { Building2, Plus, Compass, Trash2, Lock } from 'lucide-react';
 import { updateSite, deleteSite } from '../../appwrite/services/site.service';
 import { useSite } from '../context/SiteContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function SiteManagement() {
+  const { user } = useAuth();
   const { sites, fetchSites } = useSite();
   const [loading, setLoading] = useState(true);
+
+  const isAdmin = user?.role === 'admin';
 
   const [editingSite, setEditingSite] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -60,11 +64,30 @@ export default function SiteManagement() {
 
   useEffect(() => {
     const initialize = async () => {
-      await fetchSites();
+      // Only fetch sites if admin
+      if (isAdmin) {
+        await fetchSites();
+      }
       setLoading(false);
     }
     initialize();
-  }, []);
+  }, [isAdmin, fetchSites]);
+
+  if (!isAdmin) {
+    return (
+      <div className="flex-1 ml-64 bg-slate-50 min-h-screen p-8 flex items-center justify-center">
+        <div className="bg-white p-10 rounded-2xl border border-red-100 shadow-sm text-center max-w-md">
+          <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lock size={40} />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Access Restricted</h2>
+          <p className="text-gray-500 font-medium leading-relaxed">
+            You do not have permission to view or manage the global site infrastructure. Please contact your administrator.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 ml-64 bg-slate-50 min-h-screen p-8">

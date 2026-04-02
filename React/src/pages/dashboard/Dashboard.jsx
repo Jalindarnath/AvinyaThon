@@ -1,8 +1,8 @@
 import React from "react";
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { useAuth } from "../../context/AuthContext";
 
 const Dashboard = () => {
-  const { user } = useUser();
+  const { user, logout } = useAuth();
 
   return (
     <div className="flex h-screen w-screen bg-slate-50 text-slate-700 font-sans overflow-hidden">
@@ -43,8 +43,21 @@ const Dashboard = () => {
             />
           </div>
           <div className="flex items-center gap-4">
-            <span className="font-medium text-slate-600">Welcome, {user?.firstName || 'User'}!</span>
-            <UserButton afterSignOutUrl="/login" />
+            {user?.role === 'admin' && (
+              <button 
+                onClick={() => window.location.href = '/create-manager'}
+                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors shadow-sm"
+              >
+                + New Manager
+              </button>
+            )}
+            <span className="font-medium text-slate-600">Welcome, {user?.name || 'User'}!</span>
+            <button 
+              onClick={logout}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-sm font-medium transition-colors border border-slate-200"
+            >
+              Sign out
+            </button>
           </div>
         </header>
 
@@ -52,10 +65,12 @@ const Dashboard = () => {
         <div className="p-8 overflow-y-auto flex-1">
           <h1 className="text-2xl font-bold text-slate-900 mb-8">Dashboard Overview</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md border border-slate-100">
-              <h3 className="text-sm text-slate-500 mb-2 uppercase tracking-wide font-semibold">Active Projects</h3>
-              <p className="text-3xl font-bold text-slate-900">12</p>
-            </div>
+            {user?.role === 'admin' && (
+              <div className="bg-white p-6 rounded-lg shadow-md border border-slate-100">
+                <h3 className="text-sm text-slate-500 mb-2 uppercase tracking-wide font-semibold">Active Projects</h3>
+                <p className="text-3xl font-bold text-slate-900">12</p>
+              </div>
+            )}
             <div className="bg-white p-6 rounded-lg shadow-md border border-slate-100">
               <h3 className="text-sm text-slate-500 mb-2 uppercase tracking-wide font-semibold">Team Members</h3>
               <p className="text-3xl font-bold text-slate-900">24</p>

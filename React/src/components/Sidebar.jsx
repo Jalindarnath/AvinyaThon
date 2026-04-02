@@ -1,14 +1,19 @@
 import { LayoutDashboard, Building2, Users, HardHat, CalendarCheck, CreditCard, Package, FileText, BarChart3, Settings, LifeBuoy, Plus } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useSite } from '../context/SiteContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Sidebar() {
+  const { user } = useAuth();
   const { selectedSite, setSelectedSite, sites } = useSite();
   const navigate = useNavigate();
 
+  const isAdmin = user?.role === 'admin';
+
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Building2, label: 'Sites', path: '/sites' },
+    // Only add 'Sites' nav item if user is an admin
+    ...(isAdmin ? [{ icon: Building2, label: 'Sites', path: '/sites' }] : []),
     { icon: Users, label: 'Workers', path: '/workers' },
     { icon: HardHat, label: 'Engineers', path: '/engineers' },
     { icon: CalendarCheck, label: 'Attendance', path: '/attendance' },
@@ -17,8 +22,6 @@ export default function Sidebar() {
     { icon: FileText, label: 'Invoices', path: '/invoices' },
     { icon: BarChart3, label: 'Reports', path: '/reports' },
   ];
-
-
 
   const handleCreateSiteNavigate = () => {
     navigate('/create-site');
@@ -77,14 +80,16 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom Section */}
-      <div className="pt-4 border-t border-gray-100 space-y-1">
-        <button 
-          onClick={handleCreateSiteNavigate}
-          className="w-full bg-gradient-to-r from-orange-700 to-orange-800 text-white flex items-center justify-center gap-2 py-3 rounded-xl shadow-lg shadow-orange-100 mb-4 font-semibold hover:shadow-orange-200 transition-all cursor-pointer"
-        >
-          <Plus size={20} /> New Site
-        </button>
-      </div>
+      {isAdmin && (
+        <div className="pt-4 border-t border-gray-100 space-y-1">
+          <button 
+            onClick={handleCreateSiteNavigate}
+            className="w-full bg-gradient-to-r from-orange-700 to-orange-800 text-white flex items-center justify-center gap-2 py-3 rounded-xl shadow-lg shadow-orange-100 mb-4 font-semibold hover:shadow-orange-200 transition-all cursor-pointer"
+          >
+            <Plus size={20} /> New Site
+          </button>
+        </div>
+      )}
     </div>
   );
 }

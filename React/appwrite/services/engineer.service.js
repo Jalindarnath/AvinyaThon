@@ -1,4 +1,4 @@
-import { databases, ID } from "../config/appwriteConfig";
+import { databases, ID, Query } from "../config/appwriteConfig";
 import { DATABASE_ID, COLLECTIONS } from "../config/appwriteConfig";
 
 //  Add Engineer
@@ -11,10 +11,11 @@ export const addEngineer = async (data) => {
   );
 };
 
-//  Get Engineers
-export const getEngineers = async () => {
+//  Get Engineers by Site
+export const getEngineersBySite = async (siteId) => {
   return databases.listDocuments(
     DATABASE_ID,
-    COLLECTIONS.ENGINEERS
+    COLLECTIONS.ENGINEERS,
+    siteId ? [Query.equal("siteId", siteId)] : []
   );
 };

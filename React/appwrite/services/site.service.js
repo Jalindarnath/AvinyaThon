@@ -12,11 +12,19 @@ export const createSite = async (data) => {
 };
 
 //  Get All Sites (RBAC enforced)
-export const getSites = async (userId, role = 'MANAGER') => {
-  // Admin bypasses privacy filter
-  const queries = role === 'ADMIN' ? [] : [Query.equal("createdBy", userId)];
+export const getSites = async (userId, role = 'manager', assignedSiteId = null) => {
+  const lowerRole = role?.toLowerCase();
   
-  return databases.listDocuments(
+  let queries = [];
+  if (lowerRole === 'admin') {
+     queries = []; // Admin sees everything
+  } else if (lowerRole === 'manager' && assignedSiteId) {
+     queries = [Query.equal("$id", assignedSiteId)]; // Manager sees assigned site
+  } else {
+     queries = [Query.equal("createdBy", userId)]; // Fallback
+  }
+  
+  return await databases.listDocuments(
     DATABASE_ID,
     COLLECTIONS.SITES,
     queries

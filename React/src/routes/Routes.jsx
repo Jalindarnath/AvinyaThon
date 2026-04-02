@@ -1,16 +1,18 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { useAuth } from "../context/AuthContext";
 
-import Login from "../pages/auth/Login";
-import Signup from "../pages/auth/Signup";
+import LoginPage from "../pages/auth/LoginPage";
 
 // Actual components for our dashboard
 import Sidebar from "../components/Sidebar";
 import Dashboard from "../components/Dashboard";
 import SiteManagement from "../components/SiteManagement";
-import LaborersDirectory from "../components/LaborersDirectory";
+import Workers from "../pages/workers/Workers.jsx";
 import EngineeringStaff from "../components/EngineeringStaff";
 import CreateSite from "../pages/sites/CreateSite";
+import CreateManager from "../pages/admin/CreateManager.jsx";
+
+import Attendance from "../pages/attendance/Attendance.jsx";
 
 const ProtectedLayout = () => {
   return (
@@ -23,34 +25,34 @@ const ProtectedLayout = () => {
   );
 };
 
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  
+  return children;
+};
+
+const PublicOnlyRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (isAuthenticated) return <Navigate to="/" replace />;
+  
+  return children;
+};
+
 function AppRoutes() {
   return (
     <Router>
       <Routes>
         <Route 
-          path="/login/*" 
+          path="/login" 
           element={
-            <>
-              <SignedIn>
-                <Navigate to="/" replace />
-              </SignedIn>
-              <SignedOut>
-                <Login />
-              </SignedOut>
-            </>
-          } 
-        />
-        <Route 
-          path="/signup/*" 
-          element={
-            <>
-              <SignedIn>
-                <Navigate to="/" replace />
-              </SignedIn>
-              <SignedOut>
-                <Signup />
-              </SignedOut>
-            </>
+            <PublicOnlyRoute>
+              <LoginPage />
+            </PublicOnlyRoute>
           } 
         />
         
@@ -58,21 +60,18 @@ function AppRoutes() {
         <Route 
           path="/" 
           element={
-            <>
-              <SignedIn>
-                <ProtectedLayout />
-              </SignedIn>
-              <SignedOut>
-                <Navigate to="/login" replace />
-              </SignedOut>
-            </>
+            <PrivateRoute>
+              <ProtectedLayout />
+            </PrivateRoute>
           } 
         >
           <Route index element={<Dashboard />} />
           <Route path="sites" element={<SiteManagement />} />
           <Route path="create-site" element={<CreateSite />} />
-          <Route path="workers" element={<LaborersDirectory />} />
+          <Route path="workers" element={<Workers />} />
           <Route path="engineers" element={<EngineeringStaff />} />
+          <Route path="attendance" element={<Attendance />} />
+          <Route path="create-manager" element={<CreateManager />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
