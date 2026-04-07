@@ -48,7 +48,7 @@ const STATUS_OPTIONS = [
 export default function Invoices() {
   const { selectedSite } = useSite();
   const { user } = useAuth();
-  const navigate = useNavigate();
+
   const isAdmin = user?.role === 'admin';
   
   const [invoices, setInvoices] = useState([]);

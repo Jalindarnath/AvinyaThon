@@ -328,6 +328,17 @@ export default function Dashboard() {
           }
         </p>
       </section>
+      
+      {/* Low Budget Warning Banner */}
+      {!isAdmin && finance && checkBudgetAlert(finance) !== "Budget OK" && (
+        <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-700 animate-in fade-in slide-in-from-top-2 duration-500">
+           <AlertTriangle size={20} className="animate-pulse" />
+           <div className="flex-1">
+              <p className="text-xs font-black uppercase tracking-widest">Financial Threshold Breached</p>
+              <p className="text-sm font-bold opacity-80">{checkBudgetAlert(finance)}: Expenditure has crossed 80% of project capital allocation.</p>
+           </div>
+        </div>
+      )}
 
       {/* Stats Cards Section */}
       {isAdmin ? (
