@@ -203,7 +203,7 @@ const Payments = () => {
                 <p className="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">{isAdmin ? 'System Admin' : 'Site Manager'}</p>
               </div>
               <button 
-                onClick={async () => { await logout(); window.location.href = '/login'; }}
+                onClick={() => window.location.href = '/logout'}
                 className="bg-white border border-slate-200 text-slate-800 hover:text-red-700 hover:bg-red-50 hover:border-red-100 text-xs font-bold py-2.5 px-5 rounded-lg shadow-sm transition-all flex items-center gap-2"
                 title="Sign Out"
               >

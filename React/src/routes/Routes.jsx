@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
 import LoginPage from "../pages/auth/LoginPage";
 
@@ -49,6 +50,25 @@ const PublicOnlyRoute = ({ children }) => {
   return children;
 };
 
+const LogoutRoute = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const performLogout = async () => {
+      await logout();
+      navigate('/login', { replace: true });
+    };
+    performLogout();
+  }, [logout, navigate]);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+    </div>
+  );
+};
+
 function AppRoutes() {
   return (
     <Router>
@@ -61,6 +81,8 @@ function AppRoutes() {
             </PublicOnlyRoute>
           } 
         />
+        
+        <Route path="/logout" element={<LogoutRoute />} />
         
         {/* Protected Dashboard Routes */}
         <Route 

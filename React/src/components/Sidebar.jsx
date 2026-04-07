@@ -28,9 +28,8 @@ export default function Sidebar() {
     navigate('/create-site');
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
+  const handleLogout = () => {
+    window.location.href = '/logout';
   };
 
   return (
