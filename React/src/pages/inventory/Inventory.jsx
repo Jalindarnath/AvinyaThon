@@ -70,7 +70,7 @@ const formatDate = (dateStr) => {
 // ─── Component ────────────────────────────────────────────────────────────────
 const Inventory = () => {
   const { selectedSite } = useSite();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const isAdmin = user?.role === 'admin';
 
   // Form state
