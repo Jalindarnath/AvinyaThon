@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from "react";
-import { CreditCard, IndianRupee, Users, HardHat, CheckCircle, MinusCircle, History, Wallet, WalletCards, ArrowDownRight, BadgeInfo, Loader2,LogOut } from "lucide-react";
+import { CreditCard, IndianRupee, Users, HardHat, CheckCircle, MinusCircle, History, Wallet, WalletCards, ArrowDownRight, BadgeInfo, Loader2 } from "lucide-react";
 import { useSite } from "../../context/SiteContext";
 import { useAuth } from "../../context/AuthContext";
 import { getWorkersBySite, updateWorker } from "../../../appwrite/services/worker.service.js";
@@ -13,7 +13,7 @@ import { getAllEngineers } from "../../../appwrite/services/engineer.service.js"
 const Payments = () => {
   const { selectedSite } = useSite();
   const { user } = useAuth();
-  const navigate = useNavigate();
+
   const isAdmin = user?.role === 'admin';
   const [activeTab, setActiveTab] = useState(isAdmin ? 'history' : 'payouts');
   const [personnel, setPersonnel] = useState([]);

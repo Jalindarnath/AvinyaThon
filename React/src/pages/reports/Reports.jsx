@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from "react";
 import {
   BarChart3,
@@ -19,8 +19,7 @@ import {
   Loader2,
   ShieldCheck,
   PieChart,
-  Building2,
-  LogOut
+  Building2
 } from "lucide-react";
 import { useSite } from "../../context/SiteContext";
 import { useAuth } from "../../context/AuthContext";
@@ -106,8 +105,7 @@ const SectionHeader = ({ icon: Icon, title, subtitle, iconBg = "bg-slate-100", i
 // ─── Main Component ────────────────────────────────────────────────────────────
 export default function Reports() {
   const { selectedSite } = useSite();
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [finance, setFinance] = useState(null);

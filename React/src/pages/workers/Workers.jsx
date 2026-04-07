@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from 'react';
-import { UserPlus, Pencil, Trash2, Users, X, Loader2, ChevronLeft, ChevronRight, Wallet, BadgeInfo, HardHat ,LogOut} from 'lucide-react';
+import { UserPlus, Pencil, Trash2, Users, X, Loader2, ChevronLeft, ChevronRight, Wallet, BadgeInfo, HardHat } from 'lucide-react';
 import { addWorker, getWorkersBySite, updateWorker, deleteWorker, getPaginatedWorkers } from "../../../appwrite/services/worker.service.js";
 import { createPayment } from "../../../appwrite/services/payment.service.js";
 import { updateLaborCost } from "../../../appwrite/services/finance.service.js";
@@ -10,7 +10,6 @@ import { useAuth } from "../../context/AuthContext";
 const Workers = () => {
   const { selectedSite } = useSite();
   const { user } = useAuth();
-  const navigate = useNavigate();
   const isAdmin = user?.role === 'admin';
 
   const [workers, setWorkers] = useState([]);

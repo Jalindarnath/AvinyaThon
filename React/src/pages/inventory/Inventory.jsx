@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from "react";
 import {
   Package,
@@ -7,7 +7,6 @@ import {
   Layers,
   Loader2,
   ClipboardList,
-  LogOut,
   TrendingUp,
 } from "lucide-react";
 import { useSite } from "../../context/SiteContext";
@@ -72,7 +71,6 @@ const formatDate = (dateStr) => {
 const Inventory = () => {
   const { selectedSite } = useSite();
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const isAdmin = user?.role === 'admin';
 
   // Form state

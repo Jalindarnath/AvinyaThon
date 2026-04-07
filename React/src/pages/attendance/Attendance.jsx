@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from "react";
-import { CalendarCheck, Users, HardHat, CheckCircle2, XCircle, Loader2,Clock, Globe, Briefcase, Activity ,LogOut} from 'lucide-react';
+import { CalendarCheck, Users, HardHat, CheckCircle2, XCircle, Loader2, Clock, Globe, Briefcase, Activity } from 'lucide-react';
 import { useSite } from "../../context/SiteContext";
 import { useAuth } from "../../context/AuthContext";
 import { getWorkersBySite, updateWorker } from "../../../appwrite/services/worker.service.js";
@@ -10,7 +10,7 @@ import { addAttendance, updateAttendance, getAttendanceBySiteAndDate, getAttenda
 const Attendance = () => {
   const { selectedSite, sites } = useSite();
   const { user } = useAuth();
-  const navigate = useNavigate();
+
   const isAdmin = user?.role === 'admin';
   
   const [personnel, setPersonnel] = useState([]);

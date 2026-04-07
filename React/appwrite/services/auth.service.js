@@ -48,7 +48,7 @@ export const loginService = {
         try {
             await account.deleteSession('current');
         } catch (error) {
-            console.error("Logout failed", error);
+            // Silently ignore — session may already be expired or user is a guest
         }
     }
 };

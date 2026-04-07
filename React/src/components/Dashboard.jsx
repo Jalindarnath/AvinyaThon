@@ -1,19 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { Building2, Users, Wallet, CreditCard, LogOut, BarChart3, Plus, IndianRupee, PieChart, Briefcase, Settings2, Save, Minus, Pencil, Trash2, X, Loader2, ChevronLeft, ChevronRight, HardHat } from 'lucide-react';
+import { Building2, Users, Wallet, CreditCard, BarChart3, Plus, IndianRupee, PieChart, Briefcase, Settings2, Save, Minus, Pencil, Trash2, X, Loader2, ChevronLeft, ChevronRight, HardHat, AlertTriangle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from "../context/AuthContext";
 import StatCard from './StatCard';
 import { useSite } from '../context/SiteContext';
 import { getWorkersBySite, getAllWorkers } from "../../appwrite/services/worker.service.js";
 import { getEngineersBySite, getAllEngineers } from "../../appwrite/services/engineer.service.js";
-import { getFinanceBySite, createFinance, getAllFinance, allocateBudget, addAdditionalBudget } from "../../appwrite/services/finance.service.js";
+import { getFinanceBySite, createFinance, getAllFinance, allocateBudget, addAdditionalBudget, checkBudgetAlert } from "../../appwrite/services/finance.service.js";
 import { updateSite } from "../../appwrite/services/site.service.js";
 import { getInventoryBySite } from "../../appwrite/services/inventory.service.js";
 import { addWorker, updateWorker, deleteWorker, getPaginatedWorkers } from "../../appwrite/services/worker.service.js";
 import { addEngineer, updateEngineer, deleteEngineer, getPaginatedEngineers } from "../../appwrite/services/engineer.service.js";
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { selectedSite, sites } = useSite();
 
@@ -299,7 +299,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-4">
           {isAdmin && (
             <button 
-              onClick={() => window.location.href = '/create-manager'}
+              onClick={() => navigate('/create-manager')}
               className="bg-[#f2711c] hover:bg-[#d96215] text-white text-xs font-bold py-2.5 px-5 rounded-lg shadow-sm transition-all flex items-center gap-2"
             >
               <Plus size={16} /> Create Manager

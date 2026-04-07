@@ -39,8 +39,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await loginService.logout();
-    setUser(null);
+    try {
+      await loginService.logout();
+    } catch (error) {
+      // Ignore logout errors (e.g. already logged out / guest session)
+    } finally {
+      setUser(null);
+    }
   };
 
   return (

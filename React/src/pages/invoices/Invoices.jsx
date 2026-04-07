@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect, useRef } from "react";
 import { 
   FileText, 
@@ -18,8 +18,7 @@ import {
   Trash2,
   X,
   Clock,
-  Check,
-  LogOut
+  Check
 } from "lucide-react";
 import { useSite } from "../../context/SiteContext";
 import { useAuth } from "../../context/AuthContext";
