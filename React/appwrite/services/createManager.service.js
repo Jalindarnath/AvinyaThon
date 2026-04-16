@@ -13,9 +13,9 @@ export const managerCreationService = {
      * @param {string} email - Manager's email
      * @param {string} password - Temporary password
      * @param {string} name - Manager's full name
-     * @param {string} siteId - The ID of the construction site (e.g. 'nashik_01')
+     * @param {string} siteId - The ID of the construction site. Pass '' for unassigned.
      */
-    async createManager(email, password, name, siteId) {
+    async createManager(email, password, name, siteId = '') {
         try {
             // 1. Create the Auth Account
             const newManager = await users.create(
@@ -27,13 +27,12 @@ export const managerCreationService = {
             );
 
             // 2. Assign the 'manager' label for security permissions
-            // Note: users.updateLabels might return error if not enabled, wrap in try-catch if needed
             await users.updateLabels(newManager.$id, ['manager']);
 
             // 3. Set the 'Preferences' so the login knows their site
             await users.updatePrefs(newManager.$id, {
                 role: 'manager',
-                siteId: siteId
+                siteId: siteId || ''
             });
 
             return { success: true, userId: newManager.$id };
@@ -44,11 +43,33 @@ export const managerCreationService = {
     },
 
     /**
+     * Update a manager's siteId preference in Appwrite Auth.
+     * Pass siteId as '' to unassign the manager from their site.
+     * @param {string} userId - Appwrite Auth user ID
+     * @param {string} siteId - New site ID or '' to unassign
+     */
+    async updateManagerPrefs(userId, siteId = '') {
+        try {
+            // Fetch current prefs to preserve other fields
+            const currentUser = await users.get(userId);
+            const existingPrefs = currentUser.prefs || {};
+
+            await users.updatePrefs(userId, {
+                ...existingPrefs,
+                siteId: siteId || ''
+            });
+            return { success: true };
+        } catch (error) {
+            console.error("Manager Prefs Update Error:", error.message);
+            return { success: false, error: error.message };
+        }
+    },
+
+    /**
      * Fetches all users from Auth collection who have 'manager' role in preferences or 'manager' label
      */
     async getAllManagers() {
         try {
-            // Fetch users (up to 100 for now, could be paginated if needed)
             const response = await users.list([
                 Query.limit(100),
                 Query.orderDesc('$createdAt')
@@ -63,7 +84,7 @@ export const managerCreationService = {
                 $id: user.$id,
                 manager: user.name,
                 email: user.email,
-                siteId: (user.prefs && user.prefs.siteId) ? user.prefs.siteId : 'N/A'
+                siteId: (user.prefs && user.prefs.siteId) ? user.prefs.siteId : ''
             }));
 
             return { success: true, documents: authManagers };

@@ -16,7 +16,10 @@ export const getManagers = async () => {
     }
 };
 
-export const createManagerRecord = async (email, managerName, siteId) => {
+/**
+ * Create a manager record. Pass siteId as empty string or null for unassigned managers.
+ */
+export const createManagerRecord = async (email, managerName, siteId = '') => {
     try {
         const response = await databases.createDocument(
             DATABASE_ID,
@@ -25,12 +28,30 @@ export const createManagerRecord = async (email, managerName, siteId) => {
             {
                 email: email,
                 manager: managerName,
-                siteId: siteId
+                siteId: siteId || ''
             }
         );
         return response;
     } catch (error) {
         throw new Error("Failed to create manager record: " + error.message);
+    }
+};
+
+/**
+ * Update a manager's siteId (reassign or unassign).
+ * Pass siteId as '' to make the manager available (unassigned).
+ */
+export const updateManagerRecord = async (documentId, siteId) => {
+    try {
+        const response = await databases.updateDocument(
+            DATABASE_ID,
+            COLLECTIONS.MANAGERS,
+            documentId,
+            { siteId: siteId || '' }
+        );
+        return response;
+    } catch (error) {
+        throw new Error("Failed to update manager record: " + error.message);
     }
 };
 
